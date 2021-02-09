@@ -9,7 +9,7 @@ private and public key to sign jwt token
 
 token expires in 60 * 60 * 24 seconds
 
-#generation of tokens
+# generation of tokens
 
 1. generate private key
 
