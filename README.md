@@ -24,3 +24,8 @@ openssl pkcs8 -topk8 -inform PEM -in private.pem -out private_key.pem -nocrypt
 openssl rsa -in private.pem -outform PEM -pubout -out public.pem
 
 took from (https://vertx.io/docs/vertx-auth-jwt/java/)
+
+# pem files
+
+private.pem and public.pem should locate in src folder
+
