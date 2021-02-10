@@ -47,16 +47,20 @@ public class App {
             result.response().end("hello ok");
         });
 
-        router.post("/login").handler(login -> {
+        router.post("/api/authenticate").handler(login -> {
             JsonObject jsonObject = login.getBodyAsJson();
             String u = jsonObject.getString("username");
             String p = jsonObject.getString("password");
             if(u.equals("test") && p.equals("test")) {
-                login.response().end(jwtAuthHelper.getToken());
+                String freshToken = jwtAuthHelper.getToken();
+                log.info("authenticate true {}", freshToken);
+                JsonObject result = new JsonObject();
+                result.put("token", freshToken);
+                login.response().end(result.toString());
             }
         });
-        router.route("/private/*").handler(handler);
-        router.route("/private/hello").handler(ctx -> {
+        router.route("/api/private/*").handler(handler);
+        router.route("/api/private/hello").handler(ctx -> {
             User u = ctx.user();
             log.info("access_token {}", u.principal().getString("access_token"));
             log.info("username {}", u.principal().getString("username"));
@@ -73,6 +77,7 @@ public class App {
                 .allowedMethod(HttpMethod.POST)
                 .allowedMethod(HttpMethod.PUT)
                 .allowedMethod(HttpMethod.PATCH)
+                .allowedMethod(HttpMethod.OPTIONS)
                 .allowedHeader("Authorization")
                 .allowedHeader("user-agent")
                 .allowedHeader("Access-Control-Request-Method")
@@ -87,6 +92,7 @@ public class App {
                 .exposedHeader("Location")
                 .exposedHeader("Content-Type")
                 .exposedHeader("Content-Length")
+                .allowCredentials(true)
                 .exposedHeader("ETag");
         return corsHandler;
     }
